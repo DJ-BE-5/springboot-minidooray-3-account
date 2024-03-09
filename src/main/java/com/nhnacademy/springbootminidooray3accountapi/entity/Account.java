@@ -16,7 +16,6 @@ import javax.persistence.Id;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     private String password;

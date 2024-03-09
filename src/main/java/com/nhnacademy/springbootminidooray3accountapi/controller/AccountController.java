@@ -1,7 +1,11 @@
 package com.nhnacademy.springbootminidooray3accountapi.controller;
 
+import com.nhnacademy.springbootminidooray3accountapi.dto.LoginRequestDto;
+import com.nhnacademy.springbootminidooray3accountapi.dto.LoginResponseDto;
 import com.nhnacademy.springbootminidooray3accountapi.entity.Account;
 import com.nhnacademy.springbootminidooray3accountapi.service.AccountService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +21,9 @@ public class AccountController {
 
     // 로그인 api
     @PostMapping("/login")
-    public String login(@RequestParam String id, @RequestParam String password) {
-        return accountService.login(id, password);
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto) {
+        LoginResponseDto loginResponseDto = accountService.login(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponseDto);
     }
 
     // 회원가입 api
@@ -50,5 +55,7 @@ public class AccountController {
     public void deleteAccount(@PathVariable String id) {
         accountService.deleteAccount(id);
     }
+
+
 
 }

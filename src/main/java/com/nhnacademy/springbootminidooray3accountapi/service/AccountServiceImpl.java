@@ -1,6 +1,9 @@
 package com.nhnacademy.springbootminidooray3accountapi.service;
 
+import com.nhnacademy.springbootminidooray3accountapi.dto.LoginRequestDto;
+import com.nhnacademy.springbootminidooray3accountapi.dto.LoginResponseDto;
 import com.nhnacademy.springbootminidooray3accountapi.entity.Account;
+import com.nhnacademy.springbootminidooray3accountapi.exception.LoginFailedException;
 import com.nhnacademy.springbootminidooray3accountapi.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,17 +22,13 @@ public class AccountServiceImpl implements AccountService {
 
     // 로그인
     @Override
-    public String login(String id, String password) {
-        Optional<Account> optionalAccount = accountRepository.findById(id);
+    public LoginResponseDto login(LoginRequestDto requestDto) {
+        Optional<LoginResponseDto> optionalAccount =
+                accountRepository.findByIdAndPassword(requestDto.getId(), requestDto.getPassword());
         if (optionalAccount.isPresent()) {
-            Account account = optionalAccount.get();
-            if (account.getPassword().equals(password)) {
-                return "로그인 성공";
-            } else {
-                return "비밀번호 입력 오류";
-            }
+            return optionalAccount.get();
         } else {
-            return "존재하지 않는 계정";
+            throw new LoginFailedException();
         }
     }
 
