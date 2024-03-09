@@ -2,6 +2,7 @@ package com.nhnacademy.springbootminidooray3accountapi.service;
 
 import com.nhnacademy.springbootminidooray3accountapi.dto.LoginRequestDto;
 import com.nhnacademy.springbootminidooray3accountapi.dto.LoginResponseDto;
+import com.nhnacademy.springbootminidooray3accountapi.dto.UpdateAccountStateRequestDto;
 import com.nhnacademy.springbootminidooray3accountapi.entity.Account;
 
 import java.util.List;
@@ -17,8 +18,7 @@ public interface AccountService {
 
     List<Account> getAccounts();
 
-    String updateAccountState(String id, String state);
+    LoginResponseDto updateAccountState(UpdateAccountStateRequestDto requestDto);
 
     void deleteAccount(String id);
-
 }

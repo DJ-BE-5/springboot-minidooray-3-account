@@ -2,8 +2,10 @@ package com.nhnacademy.springbootminidooray3accountapi.service;
 
 import com.nhnacademy.springbootminidooray3accountapi.dto.LoginRequestDto;
 import com.nhnacademy.springbootminidooray3accountapi.dto.LoginResponseDto;
+import com.nhnacademy.springbootminidooray3accountapi.dto.UpdateAccountStateRequestDto;
 import com.nhnacademy.springbootminidooray3accountapi.entity.Account;
 import com.nhnacademy.springbootminidooray3accountapi.exception.LoginFailedException;
+import com.nhnacademy.springbootminidooray3accountapi.exception.UpdateAccountStateFailedException;
 import com.nhnacademy.springbootminidooray3accountapi.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +25,10 @@ public class AccountServiceImpl implements AccountService {
     // 로그인
     @Override
     public LoginResponseDto login(LoginRequestDto requestDto) {
-        Optional<LoginResponseDto> optionalAccount =
+        Optional<LoginResponseDto> optionalLoginResponseDto =
                 accountRepository.findByIdAndPassword(requestDto.getId(), requestDto.getPassword());
-        if (optionalAccount.isPresent()) {
-            return optionalAccount.get();
+        if (optionalLoginResponseDto.isPresent()) {
+            return optionalLoginResponseDto.get();
         } else {
             throw new LoginFailedException();
         }
@@ -52,15 +54,14 @@ public class AccountServiceImpl implements AccountService {
 
     // 회원 상태 수정
     @Override
-    public String updateAccountState(String id, String state) {
-        Optional<Account> optionalAccount = accountRepository.findById(id);
-        if (optionalAccount.isPresent()) {
-            Account account = optionalAccount.get();
-            account.setState(state);
-            accountRepository.save(account);
-            return "회원 상태 업데이트";
+    public LoginResponseDto updateAccountState(UpdateAccountStateRequestDto requestDto) {
+        Optional<LoginResponseDto> optionalLoginResponseDto =
+                accountRepository.findAccountById(requestDto.getId());
+        if(optionalLoginResponseDto.isPresent()) {
+            accountRepository.getReferenceById(requestDto.getId()).setState(requestDto.getState());
+            return optionalLoginResponseDto.get();
         } else {
-            return "존재하지 않는 계정";
+            throw new UpdateAccountStateFailedException();
         }
     }
 

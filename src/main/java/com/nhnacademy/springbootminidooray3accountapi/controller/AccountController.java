@@ -2,6 +2,7 @@ package com.nhnacademy.springbootminidooray3accountapi.controller;
 
 import com.nhnacademy.springbootminidooray3accountapi.dto.LoginRequestDto;
 import com.nhnacademy.springbootminidooray3accountapi.dto.LoginResponseDto;
+import com.nhnacademy.springbootminidooray3accountapi.dto.UpdateAccountStateRequestDto;
 import com.nhnacademy.springbootminidooray3accountapi.entity.Account;
 import com.nhnacademy.springbootminidooray3accountapi.service.AccountService;
 import org.springframework.http.HttpStatus;
@@ -46,8 +47,9 @@ public class AccountController {
 
     // 회원 상태 수정 api
     @PutMapping("/accounts/{id}/state")
-    public String updateAccountState(@PathVariable String id, @RequestParam String state) {
-        return accountService.updateAccountState(id, state);
+    public ResponseEntity<LoginResponseDto> updateAccountState(@PathVariable("id") @RequestBody UpdateAccountStateRequestDto requestDto) {
+        LoginResponseDto loginResponseDto = accountService.updateAccountState(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponseDto);
     }
 
     // 회원 정보 삭제 api

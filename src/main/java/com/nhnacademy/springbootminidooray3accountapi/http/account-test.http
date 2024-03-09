@@ -1,11 +1,30 @@
 ###
-POST http://localhost:8088/login
+POST http://localhost:8081/login
+Content-Type: application/json
+
+{
+  "id": "user1",
+  "password": "1111"
+}
+
+###
+PUT http://localhost:8081/accounts/user2/state
+Content-Type: application/json
+
+{
+  "state": "Active"
+}
+
+###
+POST http://localhost:8081/login
 Content-Type: application/json
 
 {
   "id": "user",
-  "password": "1234"
+  "password": "1111"
 }
+
+
 
 ###
 POST http://localhost:8080/login?id=user&password=12345
