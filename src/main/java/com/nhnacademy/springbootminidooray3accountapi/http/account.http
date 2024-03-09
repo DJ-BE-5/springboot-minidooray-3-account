@@ -7,3 +7,16 @@ Host: localhost:8082
   "password": "vivid123!",
   "email": "hwoarang@google.com"
 }
+
+###
+
+POST /signup
+Content-Type: application/json
+Host: localhost:8082
+
+{
+"id" : "admin1",
+"password": "vivid123!",
+"email": "hwoarang@google.com"
+}
+

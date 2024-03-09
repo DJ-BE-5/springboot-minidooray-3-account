@@ -1,9 +1,15 @@
 package com.nhnacademy.springbootminidooray3accountapi.controller;
 
-import com.nhnacademy.springbootminidooray3accountapi.Dto.AccountRequest;
+import com.nhnacademy.springbootminidooray3accountapi.dto.IdDuplicatedResponse;
+import com.nhnacademy.springbootminidooray3accountapi.dto.SignupRequest;
 import com.nhnacademy.springbootminidooray3accountapi.entity.Account;
+import com.nhnacademy.springbootminidooray3accountapi.entity.State;
+import com.nhnacademy.springbootminidooray3accountapi.exception.AccountAlreadyExistsException;
+import com.nhnacademy.springbootminidooray3accountapi.exception.ValidationFailedException;
 import com.nhnacademy.springbootminidooray3accountapi.service.AccountService;
-import com.nhnacademy.springbootminidooray3accountapi.service.AccountServiceImpl;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,13 +20,40 @@ public class AccountController {
 
     private final AccountService accountService;
 
+
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
     @PostMapping("/signup")
-    public Account createAccount(@Valid @RequestBody AccountRequest request) {
-        return accountService.createAccount(request);
+    public ResponseEntity<?> createAccount(@Valid @RequestBody SignupRequest request, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
+
+        try {
+            Account savedAccount = accountService.createAccount(request);
+            Account account = Account.builder()
+                    .id(savedAccount.getId())
+                    .email(savedAccount.getEmail())
+                    .state(State.Active.name())
+                    .build();
+            return ResponseEntity.status(HttpStatus.CREATED).body(account);
+        } catch (AccountAlreadyExistsException exception) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
+        }
+    }
+
+    @GetMapping("/signup/{id}")
+    public ResponseEntity<IdDuplicatedResponse> idCheck(@PathVariable String id){
+        boolean idDuplicated = accountService.getAccount(id).isPresent();
+        if (idDuplicated) {
+            IdDuplicatedResponse duplicatedResponse = new IdDuplicatedResponse(true);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(duplicatedResponse);
+        }else {
+            IdDuplicatedResponse duplicatedResponse = new IdDuplicatedResponse(false);
+            return ResponseEntity.ok(duplicatedResponse);
+        }
     }
 
     @GetMapping("/accounts")
