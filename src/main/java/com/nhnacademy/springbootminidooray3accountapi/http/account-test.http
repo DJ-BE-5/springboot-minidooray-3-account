@@ -4,7 +4,9 @@ Content-Type: application/json
 
 {
   "id": "user",
-  "password": "12345"
+  "password": "12345",
+  "email": "abcd1234@naver.com",
+  "state": "sleep"
 }
 
 ###
