@@ -1,7 +1,7 @@
 package com.nhnacademy.springbootminidooray3accountapi.entity;
 
 public enum State {
-    Active,
-    Inactive,
-    Dormant
+    active,
+    inactive,
+    dormant
 }

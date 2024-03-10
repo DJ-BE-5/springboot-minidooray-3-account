@@ -9,8 +9,8 @@ public class ValidationFailedException extends RuntimeException{
         super(bindingResult.getAllErrors()
                 .stream()
                 .map(error -> new StringBuilder().append("ObjectName=").append(error.getObjectName())
-                                                .append(", Message=").append(error.getDefaultMessage())
-                                                .append(", code=").append(error.getCode()))
+                        .append(", Message=").append(error.getDefaultMessage())
+                        .append(", code=").append(error.getCode()))
                 .collect(Collectors.joining(" | ")));
     }
 }

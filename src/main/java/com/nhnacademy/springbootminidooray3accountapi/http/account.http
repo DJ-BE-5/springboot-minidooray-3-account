@@ -1,6 +1,8 @@
+###
+
 POST /signup
 Content-Type: application/json
-Host: localhost:8082
+Host: localhost:8081
 X-User-ID:1
 
 {
@@ -13,11 +15,46 @@ X-User-ID:1
 
 POST /signup
 Content-Type: application/json
-Host: localhost:8082
+Host: localhost:8081
+X-USER-ID: 1
 
 {
-"id" : "admin1",
-"password": "vivid123!",
-"email": "hwoarang@google.com"
+  "id" : "admin1",
+  "password": "vivid123!",
+  "email": "hwoarang@google.com"
 }
+
+###
+POST http://localhost:8081/login
+Content-Type: application/json
+
+{
+  "id": "admin",
+  "password": "vivid123!"
+}
+
+###
+POST http://localhost:8081/login
+Content-Type: application/json
+
+{
+  "id": "admin",
+  "password": "vivid123!"
+}
+
+###
+PUT http://localhost:8081/accounts/admin/state
+Content-Type: application/json
+X-USER-ID: 1
+
+{
+  "state": "inactive"
+}
+
+
+###
+GET http://localhost:8081/accounts
+Content-Type: application/json
+X-USER-ID: admin1
+
 

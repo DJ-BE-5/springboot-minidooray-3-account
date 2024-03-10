@@ -1,8 +1,6 @@
 package com.nhnacademy.springbootminidooray3accountapi.controller;
 
-import com.nhnacademy.springbootminidooray3accountapi.dto.IdDuplicatedResponse;
-import com.nhnacademy.springbootminidooray3accountapi.dto.Responses;
-import com.nhnacademy.springbootminidooray3accountapi.dto.SignupRequest;
+import com.nhnacademy.springbootminidooray3accountapi.dto.*;
 import com.nhnacademy.springbootminidooray3accountapi.entity.Account;
 import com.nhnacademy.springbootminidooray3accountapi.exception.AccountAlreadyExistsException;
 import com.nhnacademy.springbootminidooray3accountapi.exception.MemeberNotFoundException;
@@ -27,8 +25,14 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Responses> login(@RequestBody LoginRequestDto loginRequestDto) {
+        Responses responses1  = accountService.login(loginRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responses1);
+    }
+
     @PostMapping("/signup")
-    public ResponseEntity<?> createAccount(@Valid @RequestBody SignupRequest request, BindingResult bindingResult, @RequestHeader(name = "X-USER-ID") String xUserId){
+    public ResponseEntity<?> createAccount(@Valid @RequestBody SignupRequest request, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
@@ -41,33 +45,40 @@ public class AccountController {
         }
     }
 
-    @GetMapping("/signup/{id}/exist")
-    public ResponseEntity<IdDuplicatedResponse> idCheck(@PathVariable String id){
-        boolean idDuplicated = accountService.getAccount(id).isPresent();
-        if (idDuplicated) {
-            IdDuplicatedResponse duplicatedResponse = new IdDuplicatedResponse(true);
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(duplicatedResponse);
-        }else {
-            IdDuplicatedResponse duplicatedResponse = new IdDuplicatedResponse(false);
-            return ResponseEntity.ok(duplicatedResponse);
-        }
-    }
+//    @GetMapping("/signup/{id}/exist")
+//    public ResponseEntity<IdDuplicatedResponse> idCheck(@PathVariable String id, @RequestHeader(name = "X-USER-ID") String xUserId){
+//        boolean idDuplicated = accountService.getAccount(xUserId,id).equals();
+//        if (idDuplicated) {
+//            IdDuplicatedResponse duplicatedResponse = new IdDuplicatedResponse(true);
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(duplicatedResponse);
+//        }else {
+//            IdDuplicatedResponse duplicatedResponse = new IdDuplicatedResponse(false);
+//            return ResponseEntity.ok(duplicatedResponse);
+//        }
+//    }
 
     @GetMapping("/accounts")
-    public List<Account> getAccounts() {
-        return accountService.getAccounts();
+    public List<Responses> getAccounts(@RequestHeader(name = "X-USER-ID") String xUserId) {
+        return accountService.getAccounts(xUserId);
     }
 
     @GetMapping("/accounts/{id}")
-    public Optional<Account> getAccount(@PathVariable("id") String id) {
-        Optional<Account> account = accountService.getAccount(id);
-        if (Objects.isNull(account)) {
+    public Responses getAccount(@PathVariable("id") String id, @RequestHeader(name = "X-USER-ID") String xUserId) {
+        Responses responses = accountService.getAccount(xUserId, id);
+        if (Objects.isNull(responses)) {
             throw new MemeberNotFoundException();
         }
-
-        return account;
+        return responses;
     }
 
+     //회원 상태 수정 api
+    @PutMapping("/accounts/{id}/state")
+    public ResponseEntity<Responses> updateAccountState(@PathVariable("id") String id,
+                                                        @RequestBody UpdateAccountStateRequestDto requestDto,
+                                                        @RequestHeader(name = "X-USER-ID") String xUserId) {
+        Responses responses = accountService.updateAccountState(id, requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
     @DeleteMapping("/accounts/{id}")
     public void deleteAccount(String id) {
         accountService.deleteAccount(id);

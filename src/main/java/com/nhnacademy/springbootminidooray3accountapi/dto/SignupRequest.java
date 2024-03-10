@@ -27,7 +27,7 @@ public class SignupRequest {
                 .id(id)
                 .password(password)
                 .email(email)
-                .state(State.Active.name())
+                .state(State.active.name())
                 .build();
     }
 
