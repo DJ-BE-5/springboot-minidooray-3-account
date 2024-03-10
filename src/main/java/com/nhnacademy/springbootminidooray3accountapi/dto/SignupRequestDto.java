@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 
 @Data
-public class SignupRequest {
+public class SignupRequestDto {
 
     @Length(max = 50)
     @NotBlank

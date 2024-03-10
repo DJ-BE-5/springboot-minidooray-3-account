@@ -23,28 +23,27 @@ public class AccountServiceImpl implements AccountService{
 
     private final AccountRepository accountRepository;
 
-    public List<Responses> getAccounts(String xUserId) {
+    public List<ResponseDto> getAccounts(String xUserId) {
         if (!accountRepository.existsById(xUserId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Access is forbidden.");
         }
 
         return accountRepository.findAll().stream()
-                .map(Responses::from)
+                .map(ResponseDto::from)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public Responses getAccount(String xUserId, String id) {
-        // 403
+    public ResponseDto getAccount(String xUserId, String id) {
         if(!accountRepository.existsById(xUserId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        return Responses.from(accountRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        return ResponseDto.from(accountRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
     }
 
     @Override
-    public Account createAccount(SignupRequest request) {
+    public Account createAccount(SignupRequestDto request) {
         if (accountRepository.findById(request.getId()).isPresent()) {
             throw new AccountAlreadyExistsException(request.getId()+"는 이미 존재하는 Id입니다");
         }
@@ -62,8 +61,8 @@ public class AccountServiceImpl implements AccountService{
 
     // 로그인
     @Override
-    public Responses login(LoginRequestDto requestDto) {
-        Optional<Responses> optionalLoginResponseDto =
+    public ResponseDto login(LoginRequestDto requestDto) {
+        Optional<ResponseDto> optionalLoginResponseDto =
                 accountRepository.findByIdAndPassword(requestDto.getId(), requestDto.getPassword());
         if (optionalLoginResponseDto.isPresent()) {
             return optionalLoginResponseDto.get();
@@ -73,7 +72,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public Responses updateAccountState(String xUserId, String id, UpdateAccountStateRequestDto requestDto) {
+    public ResponseDto updateAccountState(String xUserId, String id, UpdateAccountStateRequestDto requestDto) {
         if (!accountRepository.existsById(xUserId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
@@ -82,7 +81,7 @@ public class AccountServiceImpl implements AccountService{
         if(accountOptional.isPresent()) {
             Account account = accountOptional.get();
             account.setState(requestDto.getState());
-            return Responses.from(account);
+            return ResponseDto.from(account);
         } else {
             throw new UpdateAccountStateFailedException();
         }

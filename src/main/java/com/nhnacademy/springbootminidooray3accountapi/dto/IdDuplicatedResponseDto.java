@@ -5,10 +5,10 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class IdDuplicatedResponse {
+public class IdDuplicatedResponseDto {
     private boolean idDuplicated;
 
-    public IdDuplicatedResponse(boolean idDuplicated) {
+    public IdDuplicatedResponseDto(boolean idDuplicated) {
         this.idDuplicated = idDuplicated;
     }
 

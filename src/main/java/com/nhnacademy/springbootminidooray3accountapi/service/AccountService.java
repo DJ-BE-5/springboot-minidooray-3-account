@@ -8,16 +8,16 @@ import java.util.Optional;
 
 public interface AccountService {
 
-    Responses login(LoginRequestDto loginRequestDto);
+    ResponseDto login(LoginRequestDto loginRequestDto);
 
-    List<Responses> getAccounts(String xUserId);
+    List<ResponseDto> getAccounts(String xUserId);
 
-    Responses getAccount(String xUserId, String id);
+    ResponseDto getAccount(String xUserId, String id);
 
-    Account createAccount(SignupRequest request);
+    Account createAccount(SignupRequestDto request);
 
     void deleteAccount(String xUserId, String id);
 
-    Responses updateAccountState(String xUserId, String id, UpdateAccountStateRequestDto requestDto);
+    ResponseDto updateAccountState(String xUserId, String id, UpdateAccountStateRequestDto requestDto);
 
 }
