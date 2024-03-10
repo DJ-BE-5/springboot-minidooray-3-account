@@ -1,8 +1,6 @@
 package com.nhnacademy.springbootminidooray3accountapi.controller;
 
-import com.nhnacademy.springbootminidooray3accountapi.dto.IdDuplicatedResponse;
-import com.nhnacademy.springbootminidooray3accountapi.dto.Responses;
-import com.nhnacademy.springbootminidooray3accountapi.dto.SignupRequest;
+import com.nhnacademy.springbootminidooray3accountapi.dto.*;
 import com.nhnacademy.springbootminidooray3accountapi.entity.Account;
 import com.nhnacademy.springbootminidooray3accountapi.exception.AccountAlreadyExistsException;
 import com.nhnacademy.springbootminidooray3accountapi.exception.MemeberNotFoundException;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 public class AccountController {
@@ -27,50 +24,55 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<ResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        ResponseDto responseDto  = accountService.login(loginRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
     @PostMapping("/signup")
-    public ResponseEntity<?> createAccount(@Valid @RequestBody SignupRequest request, BindingResult bindingResult, @RequestHeader(name = "X-USER-ID") String xUserId){
+    public ResponseEntity<?> createAccount(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
 
         try {
-            Account savedAccount = accountService.createAccount(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new Responses(savedAccount.getId(), savedAccount.getEmail(), savedAccount.getState()));
+            Account savedAccount = accountService.createAccount(requestDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto(savedAccount.getId(), savedAccount.getEmail(), savedAccount.getState()));
         } catch (AccountAlreadyExistsException exception) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
         }
     }
 
-    @GetMapping("/signup/{id}/exist")
-    public ResponseEntity<IdDuplicatedResponse> idCheck(@PathVariable String id){
-        boolean idDuplicated = accountService.getAccount(id).isPresent();
-        if (idDuplicated) {
-            IdDuplicatedResponse duplicatedResponse = new IdDuplicatedResponse(true);
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(duplicatedResponse);
-        }else {
-            IdDuplicatedResponse duplicatedResponse = new IdDuplicatedResponse(false);
-            return ResponseEntity.ok(duplicatedResponse);
-        }
-    }
-
     @GetMapping("/accounts")
-    public List<Account> getAccounts() {
-        return accountService.getAccounts();
+    public List<ResponseDto> getAccounts(@RequestHeader(name = "X-USER-ID") String xUserId) {
+        return accountService.getAccounts(xUserId);
     }
 
     @GetMapping("/accounts/{id}")
-    public Optional<Account> getAccount(@PathVariable("id") String id) {
-        Optional<Account> account = accountService.getAccount(id);
-        if (Objects.isNull(account)) {
+    public ResponseDto getAccount(@PathVariable("id") String id, @RequestHeader(name = "X-USER-ID") String xUserId) {
+        ResponseDto responseDto = accountService.getAccount(xUserId, id);
+        if (Objects.isNull(responseDto)) {
             throw new MemeberNotFoundException();
         }
-
-        return account;
+        return responseDto;
     }
+
+     @PutMapping("/accounts/{id}/state")
+     public ResponseEntity<ResponseDto> updateAccountState(@PathVariable("id") String id,
+                                                         @RequestBody UpdateAccountStateRequestDto requestDto,
+                                                         @RequestHeader(name = "X-USER-ID") String xUserId) {
+         ResponseDto responseDto = accountService.getAccount(xUserId, id);
+         if (Objects.isNull(responseDto)) {
+             throw new MemeberNotFoundException();
+         }
+         accountService.updateAccountState(xUserId, responseDto.getId(), requestDto);
+         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+     }
 
     @DeleteMapping("/accounts/{id}")
-    public void deleteAccount(String id) {
-        accountService.deleteAccount(id);
+    public ResponseEntity<Void> deleteAccount(@PathVariable String id, @RequestHeader(name = "X-USER-ID") String xUserId) {
+        accountService.deleteAccount(xUserId, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }

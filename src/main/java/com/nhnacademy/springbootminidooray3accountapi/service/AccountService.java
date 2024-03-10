@@ -1,6 +1,6 @@
 package com.nhnacademy.springbootminidooray3accountapi.service;
 
-import com.nhnacademy.springbootminidooray3accountapi.dto.SignupRequest;
+import com.nhnacademy.springbootminidooray3accountapi.dto.*;
 import com.nhnacademy.springbootminidooray3accountapi.entity.Account;
 
 import java.util.List;
@@ -8,13 +8,16 @@ import java.util.Optional;
 
 public interface AccountService {
 
-    List<Account> getAccounts();
+    ResponseDto login(LoginRequestDto loginRequestDto);
 
-    Optional<Account> getAccount(String id);
+    List<ResponseDto> getAccounts(String xUserId);
 
-    Account createAccount(SignupRequest request);
+    ResponseDto getAccount(String xUserId, String id);
 
-    void deleteAccount(String id);
+    Account createAccount(SignupRequestDto request);
 
-    Account modifyAccount(Account account);
+    void deleteAccount(String xUserId, String id);
+
+    ResponseDto updateAccountState(String xUserId, String id, UpdateAccountStateRequestDto requestDto);
+
 }
