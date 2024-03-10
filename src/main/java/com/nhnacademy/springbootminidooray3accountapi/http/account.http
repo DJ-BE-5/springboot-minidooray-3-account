@@ -1,5 +1,3 @@
-###
-
 POST /signup
 Content-Type: application/json
 Host: localhost:8081
@@ -50,7 +48,6 @@ X-USER-ID: 1
 {
   "state": "inactive"
 }
-
 
 ###
 GET http://localhost:8081/accounts

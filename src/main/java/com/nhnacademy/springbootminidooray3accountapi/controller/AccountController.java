@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 public class AccountController {
@@ -72,13 +71,16 @@ public class AccountController {
     }
 
      //회원 상태 수정 api
-    @PutMapping("/accounts/{id}/state")
-    public ResponseEntity<Responses> updateAccountState(@PathVariable("id") String id,
-                                                        @RequestBody UpdateAccountStateRequestDto requestDto,
-                                                        @RequestHeader(name = "X-USER-ID") String xUserId) {
-        Responses responses = accountService.updateAccountState(id, requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(responses);
-    }
+     @PutMapping("/accounts/{id}/state")
+     public ResponseEntity<Responses> updateAccountState(@PathVariable("id") String id,
+                                                         @RequestBody UpdateAccountStateRequestDto requestDto,
+                                                         @RequestHeader(name = "X-USER-ID") String xUserId) {
+         Responses responses = accountService.getAccount(xUserId, id);
+
+         Responses responses1 = accountService.updateAccountState(id, requestDto);
+         return ResponseEntity.status(HttpStatus.OK).body(responses);
+     }
+
     @DeleteMapping("/accounts/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable String id, @RequestHeader(name = "X-USER-ID") String xUserId) {
         accountService.deleteAccount(xUserId, id);
