@@ -1,0 +1,23 @@
+POST /signup
+Content-Type: application/json
+Host: localhost:8082
+X-User-ID:1
+
+{
+  "id" : "admin",
+  "password": "vivid123!",
+  "email": "hwoarang@google.com"
+}
+
+###
+
+POST /signup
+Content-Type: application/json
+Host: localhost:8082
+
+{
+"id" : "admin1",
+"password": "vivid123!",
+"email": "hwoarang@google.com"
+}
+
