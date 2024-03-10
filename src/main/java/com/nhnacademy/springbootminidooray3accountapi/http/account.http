@@ -57,4 +57,7 @@ GET http://localhost:8081/accounts
 Content-Type: application/json
 X-USER-ID: admin1
 
-
+###
+DELETE http://localhost:8081/accounts/admin1
+Content-Type: application/json
+X-USER-ID: admin1

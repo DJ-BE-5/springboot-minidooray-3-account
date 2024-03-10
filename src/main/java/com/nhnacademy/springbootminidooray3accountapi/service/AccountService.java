@@ -16,7 +16,7 @@ public interface AccountService {
 
     Account createAccount(SignupRequest request);
 
-    void deleteAccount(String id);
+    void deleteAccount(String xUserId, String id);
 
     Responses updateAccountState(String id, UpdateAccountStateRequestDto requestDto);
 

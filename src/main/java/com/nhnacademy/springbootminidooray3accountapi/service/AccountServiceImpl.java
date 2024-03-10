@@ -51,6 +51,15 @@ public class AccountServiceImpl implements AccountService{
         return accountRepository.save(request.toEntity());
     }
 
+    @Override
+    public void deleteAccount(String xUserId, String id) {
+        if (!accountRepository.existsById(xUserId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } else  {
+            accountRepository.deleteById(id);
+        }
+    }
+
     // 로그인
     @Override
     public Responses login(LoginRequestDto requestDto) {
@@ -76,6 +85,5 @@ public class AccountServiceImpl implements AccountService{
         }
     }
 
-    public void deleteAccount(String id) {
-    }
+
 }

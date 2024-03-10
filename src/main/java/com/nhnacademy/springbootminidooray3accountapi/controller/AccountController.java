@@ -80,8 +80,8 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
     @DeleteMapping("/accounts/{id}")
-    public void deleteAccount(String id) {
-        accountService.deleteAccount(id);
+    public ResponseEntity<Void> deleteAccount(@PathVariable String id, @RequestHeader(name = "X-USER-ID") String xUserId) {
+        accountService.deleteAccount(xUserId, id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }
