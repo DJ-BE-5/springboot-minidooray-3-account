@@ -1,6 +1,7 @@
 POST /signup
 Content-Type: application/json
 Host: localhost:8082
+X-User-ID:1
 
 {
   "id" : "admin",
