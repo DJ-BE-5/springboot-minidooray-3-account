@@ -76,8 +76,10 @@ public class AccountController {
                                                          @RequestBody UpdateAccountStateRequestDto requestDto,
                                                          @RequestHeader(name = "X-USER-ID") String xUserId) {
          Responses responses = accountService.getAccount(xUserId, id);
-
-         Responses responses1 = accountService.updateAccountState(id, requestDto);
+         if (Objects.isNull(responses)) {
+             throw new MemeberNotFoundException();
+         }
+         accountService.updateAccountState(xUserId, responses.getId(), requestDto);
          return ResponseEntity.status(HttpStatus.OK).body(responses);
      }
 

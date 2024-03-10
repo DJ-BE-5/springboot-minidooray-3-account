@@ -73,8 +73,11 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    @Transactional
-    public Responses updateAccountState(String id, UpdateAccountStateRequestDto requestDto) {
+    public Responses updateAccountState(String xUserId, String id, UpdateAccountStateRequestDto requestDto) {
+        if (!accountRepository.existsById(xUserId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
         Optional<Account> accountOptional = accountRepository.findById(id);
         if(accountOptional.isPresent()) {
             Account account = accountOptional.get();
@@ -84,6 +87,5 @@ public class AccountServiceImpl implements AccountService{
             throw new UpdateAccountStateFailedException();
         }
     }
-
 
 }

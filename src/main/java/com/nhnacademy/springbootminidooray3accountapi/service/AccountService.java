@@ -18,6 +18,6 @@ public interface AccountService {
 
     void deleteAccount(String xUserId, String id);
 
-    Responses updateAccountState(String id, UpdateAccountStateRequestDto requestDto);
+    Responses updateAccountState(String xUserId, String id, UpdateAccountStateRequestDto requestDto);
 
 }

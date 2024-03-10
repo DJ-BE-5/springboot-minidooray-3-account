@@ -43,7 +43,7 @@ Content-Type: application/json
 ###
 PUT http://localhost:8081/accounts/admin/state
 Content-Type: application/json
-X-USER-ID: 1
+X-USER-ID: admin
 
 {
   "state": "inactive"

@@ -17,6 +17,7 @@ public class Responses {
         this.email = email;
         this.State = State;
     }
+
     public static Responses from(Account acocunt) {
         return new Responses(acocunt.getId(), acocunt.getEmail(), acocunt.getState());
     }
