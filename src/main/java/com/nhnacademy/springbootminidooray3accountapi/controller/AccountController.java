@@ -47,8 +47,9 @@ public class AccountController {
 
     // 회원 상태 수정 api
     @PutMapping("/accounts/{id}/state")
-    public ResponseEntity<LoginResponseDto> updateAccountState(@PathVariable("id") @RequestBody UpdateAccountStateRequestDto requestDto) {
-        LoginResponseDto loginResponseDto = accountService.updateAccountState(requestDto);
+    public ResponseEntity<LoginResponseDto> updateAccountState(@PathVariable("id") String id,
+                                                               @RequestBody UpdateAccountStateRequestDto requestDto) {
+        LoginResponseDto loginResponseDto = accountService.updateAccountState(id, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(loginResponseDto);
     }
 

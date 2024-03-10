@@ -1,6 +1,7 @@
 ###
 POST http://localhost:8081/login
 Content-Type: application/json
+X-USER-ID: 1
 
 {
   "id": "user1",
@@ -12,7 +13,7 @@ PUT http://localhost:8081/accounts/user2/state
 Content-Type: application/json
 
 {
-  "state": "Active"
+  "state": "inactive"
 }
 
 ###

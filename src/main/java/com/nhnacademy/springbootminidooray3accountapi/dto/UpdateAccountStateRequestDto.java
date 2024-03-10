@@ -11,7 +11,5 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class UpdateAccountStateRequestDto {
 
-    private String id;
-
     private String state;
 }

@@ -18,7 +18,7 @@ public interface AccountService {
 
     List<Account> getAccounts();
 
-    LoginResponseDto updateAccountState(UpdateAccountStateRequestDto requestDto);
+    LoginResponseDto updateAccountState(String id, UpdateAccountStateRequestDto requestDto);
 
     void deleteAccount(String id);
 }

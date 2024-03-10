@@ -9,6 +9,7 @@ import com.nhnacademy.springbootminidooray3accountapi.exception.UpdateAccountSta
 import com.nhnacademy.springbootminidooray3accountapi.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,12 +55,13 @@ public class AccountServiceImpl implements AccountService {
 
     // 회원 상태 수정
     @Override
-    public LoginResponseDto updateAccountState(UpdateAccountStateRequestDto requestDto) {
-        Optional<LoginResponseDto> optionalLoginResponseDto =
-                accountRepository.findAccountById(requestDto.getId());
-        if(optionalLoginResponseDto.isPresent()) {
-            accountRepository.getReferenceById(requestDto.getId()).setState(requestDto.getState());
-            return optionalLoginResponseDto.get();
+    @Transactional
+    public LoginResponseDto updateAccountState(String id, UpdateAccountStateRequestDto requestDto) {
+        Optional<Account> accountOptional = accountRepository.findById(id);
+        if(accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            account.setState(requestDto.getState());
+            return LoginResponseDto.from(account);
         } else {
             throw new UpdateAccountStateFailedException();
         }
