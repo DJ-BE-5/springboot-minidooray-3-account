@@ -10,7 +10,6 @@ X-User-ID:1
 }
 
 ###
-
 POST /signup
 Content-Type: application/json
 Host: localhost:8081

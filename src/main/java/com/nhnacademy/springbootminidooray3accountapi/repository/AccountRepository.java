@@ -12,5 +12,4 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     Optional<ResponseDto> findByIdAndPassword(String id, String password);
 
-    Optional<ResponseDto> findAccountById(String id);
 }

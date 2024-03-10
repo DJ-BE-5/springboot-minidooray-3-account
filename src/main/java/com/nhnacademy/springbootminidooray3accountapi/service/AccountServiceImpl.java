@@ -59,7 +59,6 @@ public class AccountServiceImpl implements AccountService{
         }
     }
 
-    // 로그인
     @Override
     public ResponseDto login(LoginRequestDto requestDto) {
         Optional<ResponseDto> optionalLoginResponseDto =

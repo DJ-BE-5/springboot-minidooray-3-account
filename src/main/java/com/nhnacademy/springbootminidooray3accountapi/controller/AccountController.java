@@ -58,7 +58,6 @@ public class AccountController {
         return responseDto;
     }
 
-     //회원 상태 수정 api
      @PutMapping("/accounts/{id}/state")
      public ResponseEntity<ResponseDto> updateAccountState(@PathVariable("id") String id,
                                                          @RequestBody UpdateAccountStateRequestDto requestDto,
