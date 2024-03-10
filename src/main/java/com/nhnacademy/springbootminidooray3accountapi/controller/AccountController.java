@@ -1,9 +1,9 @@
 package com.nhnacademy.springbootminidooray3accountapi.controller;
 
 import com.nhnacademy.springbootminidooray3accountapi.dto.IdDuplicatedResponse;
+import com.nhnacademy.springbootminidooray3accountapi.dto.Responses;
 import com.nhnacademy.springbootminidooray3accountapi.dto.SignupRequest;
 import com.nhnacademy.springbootminidooray3accountapi.entity.Account;
-import com.nhnacademy.springbootminidooray3accountapi.entity.State;
 import com.nhnacademy.springbootminidooray3accountapi.exception.AccountAlreadyExistsException;
 import com.nhnacademy.springbootminidooray3accountapi.exception.ValidationFailedException;
 import com.nhnacademy.springbootminidooray3accountapi.service.AccountService;
@@ -20,7 +20,6 @@ public class AccountController {
 
     private final AccountService accountService;
 
-
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
@@ -33,18 +32,13 @@ public class AccountController {
 
         try {
             Account savedAccount = accountService.createAccount(request);
-            Account account = Account.builder()
-                    .id(savedAccount.getId())
-                    .email(savedAccount.getEmail())
-                    .state(State.Active.name())
-                    .build();
-            return ResponseEntity.status(HttpStatus.CREATED).body(account);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Responses(savedAccount.getId(), savedAccount.getEmail(), savedAccount.getState()));
         } catch (AccountAlreadyExistsException exception) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(exception.getMessage());
         }
     }
 
-    @GetMapping("/signup/{id}")
+    @GetMapping("/signup/{id}/exist")
     public ResponseEntity<IdDuplicatedResponse> idCheck(@PathVariable String id){
         boolean idDuplicated = accountService.getAccount(id).isPresent();
         if (idDuplicated) {
@@ -56,8 +50,8 @@ public class AccountController {
         }
     }
 
-    @GetMapping("/accounts")
-    public List<Account> getAccount() {
+    @GetMapping("/accounts/{id}")
+    public List<Account> getAccounts() {
         return accountService.getAccounts();
     }
 

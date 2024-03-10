@@ -7,7 +7,6 @@ import com.nhnacademy.springbootminidooray3accountapi.repository.AccountReposito
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.nio.channels.AcceptPendingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +24,6 @@ public class AccountServiceImpl implements AccountService{
     public Optional<Account> getAccount(String id) {
         return accountRepository.findById(id);
     }
-
 
     @Override
     public Account createAccount(SignupRequest request) {
